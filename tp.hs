@@ -71,17 +71,17 @@ desplazar (a, b) Derecha   = (a, b + 1)
 desplazar (a, b) Abajo     = (a + 1, b)
 desplazar (a, b) Izquierda = (a, b - 1)
 
--- caminoValidoComenzandoEn: Determina si un camino se mantiene dentro de los límites de un tablero a lo largo de su trayectoria,
+-- caminoValidoDesde: Determina si un camino se mantiene dentro de los límites de un tablero a lo largo de su trayectoria,
 --                           comenzando en la posición dada.
-caminoValidoComenzandoEn :: Tablero a -> Camino -> Posicion -> Bool
-caminoValidoComenzandoEn tablero [] pos = posValida tablero pos
-caminoValidoComenzandoEn tablero (d:ds) pos = (posValida tablero pos) && (caminoValidoComenzandoEn tablero ds siguientePosicion)
+caminoValidoDesde :: Tablero a -> Camino -> Posicion -> Bool
+caminoValidoDesde tablero [] pos = posValida tablero pos
+caminoValidoDesde tablero (d:ds) pos = (posValida tablero pos) && (caminoValidoDesde tablero ds siguientePosicion)
     where siguientePosicion = desplazar pos d
 
 -- Determina si un camino se mantiene dentro de los límites del tablero a lo largo de su trayectoria, 
 -- asumiendo que se comenzará por la posición (1, 1).
 caminoValido :: Tablero a -> Camino -> Bool
-caminoValido tablero camino = caminoValidoComenzandoEn tablero camino (1, 1)
+caminoValido tablero camino = caminoValidoDesde tablero camino (1, 1)
 
 
 -- funcion 2 --
@@ -95,14 +95,14 @@ posicionSalida tablero = (indiceFinal, indiceFinal)
 hayMina :: CampoMinado -> Posicion -> Bool
 hayMina campo pos = (valor campo pos)   -- La presencia de minas esta determinada por un "True"
 
---- caminoDeSalidaComenzandoEn: Determina si un RAE, comenzando en la posicion dada, al seguir el camino dado,
+--- caminoDeSalidaDesde: Determina si un RAE, comenzando en la posicion dada, al seguir el camino dado,
 --                              llega a la posicion (n, n) sin pisar ninguna mina.
-caminoDeSalidaComenzandoEn :: CampoMinado -> Camino -> Posicion -> Bool
-caminoDeSalidaComenzandoEn campo [] pos = esPosicionSalida && (not (hayMina campo pos))
+caminoDeSalidaDesde :: CampoMinado -> Camino -> Posicion -> Bool
+caminoDeSalidaDesde campo [] pos = esPosicionSalida && (not (hayMina campo pos))
     where esPosicionSalida = (pos == (posicionSalida campo))
-caminoDeSalidaComenzandoEn campo (d:ds) pos
-    | not (caminoValidoComenzandoEn campo (d:ds) pos) = False    -- Si no es un camino valido, siempre será False
-    | otherwise = (not (hayMina campo pos)) && caminoDeSalidaComenzandoEn campo ds siguientePosicion
+caminoDeSalidaDesde campo (d:ds) pos
+    | not (caminoValidoDesde campo (d:ds) pos) = False    -- Si no es un camino valido, siempre será False
+    | otherwise = (not (hayMina campo pos)) && caminoDeSalidaDesde campo ds siguientePosicion
     where siguientePosicion = desplazar pos d
 
 --- caminoDeSalida: Determina si un RAE, comenzando en la posición (1, 1), al seguir el camino dado, 
