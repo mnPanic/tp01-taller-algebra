@@ -84,6 +84,32 @@ caminoValido :: Tablero a -> Camino -> Bool
 caminoValido tablero camino = caminoValidoComenzandoEn tablero camino (1, 1)
 
 
+-- funcion 2 --
+
+--- posicionSalida: Dado un tablero, devuelve la posicion de salida.
+posicionSalida :: Tablero a -> Posicion
+posicionSalida tablero = (indiceFinal, indiceFinal)
+    where indiceFinal = tamano tablero
+
+--- hayMina: Dado un Campo Minado, dice si hay una mina en una posicion dada
+hayMina :: CampoMinado -> Posicion -> Bool
+hayMina campo pos = (valor campo pos)   -- La presencia de minas esta determinada por un "True"
+
+--- caminoDeSalidaComenzandoEn: Determina si un RAE, comenzando en la posicion dada, al seguir el camino dado,
+--                              llega a la posicion (n, n) sin pisar ninguna mina.
+caminoDeSalidaComenzandoEn :: CampoMinado -> Camino -> Posicion -> Bool
+caminoDeSalidaComenzandoEn campo [] pos = esPosicionSalida && (not (hayMina campo pos))
+    where esPosicionSalida = (pos == (posicionSalida campo))
+caminoDeSalidaComenzandoEn campo (d:ds) pos
+    | not (caminoValidoComenzandoEn campo (d:ds) pos) = False    -- Si no es un camino valido, siempre será False
+    | otherwise = (not (hayMina campo pos)) && caminoDeSalidaComenzandoEn campo ds siguientePosicion
+    where siguientePosicion = desplazar pos d
+
+--- caminoDeSalida: Determina si un RAE, comenzando en la posición (1, 1), al seguir el camino dado, 
+--                  llega a la posición (n, n) sin pisar ninguna mina.
+caminoDeSalida :: CampoMinado -> Camino -> Bool
+caminoDeSalida campo camino = caminoDeSalidaComenzandoEn campo camino (1, 1)
+
 -----------------------------------------------------------------------
 -- PARTE B
 -----------------------------------------------------------------------
