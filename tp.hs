@@ -75,8 +75,8 @@ desplazar (a, b) Izquierda = (a, b - 1)
 --                           comenzando en la posición dada.
 caminoValidoDesde :: Tablero a -> Camino -> Posicion -> Bool
 caminoValidoDesde tablero [] pos = posValida tablero pos
-caminoValidoDesde tablero (d:ds) pos = (posValida tablero pos) && (caminoValidoDesde tablero ds siguientePosicion)
-    where siguientePosicion = desplazar pos d
+caminoValidoDesde tablero (d:ds) pos = (posValida tablero pos) && (caminoValidoDesde tablero ds siguientePos)
+    where siguientePos = desplazar pos d
 
 -- Determina si un camino se mantiene dentro de los límites del tablero a lo largo de su trayectoria, 
 -- asumiendo que se comenzará por la posición (1, 1).
@@ -102,8 +102,8 @@ caminoDeSalidaDesde campo [] pos = esPosicionSalida && (not (hayMina campo pos))
     where esPosicionSalida = (pos == (posicionSalida campo))
 caminoDeSalidaDesde campo (d:ds) pos
     | not (caminoValidoDesde campo (d:ds) pos) = False    -- Si no es un camino valido (se sale del tablero), siempre será False
-    | otherwise = (not (hayMina campo pos)) && caminoDeSalidaDesde campo ds siguientePosicion
-    where siguientePosicion = desplazar pos d
+    | otherwise = (not (hayMina campo pos)) && caminoDeSalidaDesde campo ds siguientePos
+    where siguientePos = desplazar pos d
 
 --- caminoDeSalida: Determina si un RAE, comenzando en la posición (1, 1), al seguir el camino dado, 
 --                  llega a la posición (n, n) sin pisar ninguna mina.
@@ -122,8 +122,8 @@ contenidoEn n l = elem n l
 --                                     se fija si ese camino tendra posiciones repetidas.
 caminoSinPosicionesRepetidasDesde :: Camino -> Posicion -> Conjunto Posicion -> Bool
 caminoSinPosicionesRepetidasDesde [] _ _ = True
-caminoSinPosicionesRepetidasDesde (d:ds) pos posiciones = (not (siguientePosicion `contenidoEn` posiciones)) && (caminoSinPosicionesRepetidasDesde ds siguientePosicion (pos:posiciones))
-    where siguientePosicion = desplazar pos d
+caminoSinPosicionesRepetidasDesde (d:ds) pos posiciones = (not (siguientePos `contenidoEn` posiciones)) && (caminoSinPosicionesRepetidasDesde ds siguientePos (pos:posiciones))
+    where siguientePos = desplazar pos d
     -- TODO: ponerle un where
 
 --- caminoSinPosicionesRepetidas: Dado un camino, se fija si tiene posiciones repetidas.
