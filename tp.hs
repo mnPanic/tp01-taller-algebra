@@ -108,7 +108,33 @@ caminoDeSalidaDesde campo (d:ds) pos
 --- caminoDeSalida: Determina si un RAE, comenzando en la posición (1, 1), al seguir el camino dado, 
 --                  llega a la posición (n, n) sin pisar ninguna mina.
 caminoDeSalida :: CampoMinado -> Camino -> Bool
-caminoDeSalida campo camino = caminoDeSalidaComenzandoEn campo camino (1, 1)
+caminoDeSalida campo camino = caminoDeSalidaDesde campo camino (1, 1)
+
+
+-- funcion 3 --
+
+--- contiene: Dado una lista de elementos y un elemento, dice si ese elemento pertenece a la lista.
+contenidoEn :: Eq a => a -> [a] -> Bool
+contenidoEn n l = elem n l
+
+--- caminoSinPosicionesRepetidasDesde: Dado un camino, una posicion desde la cual comenzar, 
+--                                     y un conjunto de posiciones recorridas,
+--                                     se fija si ese camino tendra posiciones repetidas.
+caminoSinPosicionesRepetidasDesde :: Camino -> Posicion -> Conjunto Posicion -> Bool
+caminoSinPosicionesRepetidasDesde [] _ _ = True
+caminoSinPosicionesRepetidasDesde (d:ds) pos posiciones = (not (siguientePosicion `contenidoEn` posiciones)) && (caminoSinPosicionesRepetidasDesde ds siguientePosicion (pos:posiciones))
+    where siguientePosicion = desplazar pos d
+    -- TODO: ponerle un where
+
+--- caminoSinPosicionesRepetidas: Dado un camino, se fija si tiene posiciones repetidas.
+caminoSinPosicionesRepetidas :: Camino -> Bool
+caminoSinPosicionesRepetidas camino = caminoSinPosicionesRepetidasDesde camino (1, 1) []
+
+--- caminoDeSalidaSinRepetidos: Determina si un RAE, comenzando en la posición (1, 1), al seguir el camino dado,
+--                              llega a la posición (n, n) sin pisar ninguna mina y sin pasar dos veces por una
+--                              misma posición.
+caminoDeSalidaSinRepetidos :: CampoMinado -> Camino -> Bool
+caminoDeSalidaSinRepetidos campo camino = (caminoDeSalida campo camino) && (caminoSinPosicionesRepetidas camino)
 
 -----------------------------------------------------------------------
 -- PARTE B
