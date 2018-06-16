@@ -75,7 +75,7 @@ desplazar (a, b) Izquierda = (a, b - 1)
 --                           comenzando en la posición dada.
 caminoValidoComenzandoEn :: Tablero a -> Camino -> Posicion -> Bool
 caminoValidoComenzandoEn tablero [] pos = posValida tablero pos
-caminoValidoComenzandoEn tablero (d:ds) pos = (posValida tablero siguientePosicion) && (caminoValidoComenzandoEn tablero ds siguientePosicion)
+caminoValidoComenzandoEn tablero (d:ds) pos = (posValida tablero pos) && (caminoValidoComenzandoEn tablero ds siguientePosicion)
     where siguientePosicion = desplazar pos d
 
 -- Determina si un camino se mantiene dentro de los límites del tablero a lo largo de su trayectoria, 
