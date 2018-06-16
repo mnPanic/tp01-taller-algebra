@@ -101,7 +101,7 @@ caminoDeSalidaDesde :: CampoMinado -> Camino -> Posicion -> Bool
 caminoDeSalidaDesde campo [] pos = esPosicionSalida && (not (hayMina campo pos))
     where esPosicionSalida = (pos == (posicionSalida campo))
 caminoDeSalidaDesde campo (d:ds) pos
-    | not (caminoValidoDesde campo (d:ds) pos) = False    -- Si no es un camino valido, siempre será False
+    | not (caminoValidoDesde campo (d:ds) pos) = False    -- Si no es un camino valido (se sale del tablero), siempre será False
     | otherwise = (not (hayMina campo pos)) && caminoDeSalidaDesde campo ds siguientePosicion
     where siguientePosicion = desplazar pos d
 
