@@ -307,6 +307,7 @@ agregarTodos (x:xs) conjunto = (agregarATodasLasListas x conjunto)++(agregarTodo
 --               listas de dicha longitud con los elementos dados.
 --  Ej. variaciones [4, 7] 2 ~> [[4,4], [4,7], [7,4], [7,7]]
 variaciones :: Conjunto a -> Integer -> Conjunto [a]
+variaciones _ 0 = []
 variaciones elementos 1 = listaDeElementos elementos
 variaciones elementos n = agregarTodos elementos variacionAnterior
                         where variacionAnterior = variaciones elementos (n - 1)
