@@ -275,3 +275,52 @@ escapaDelTablero tablero pos = not (tieneRepetidos (recorrido tablero pos))
 --       es en el que en esa lista no hay elementos repetidos.
 --       En escapaDelTablero eso no se da nunca. Pues si un camino no tiene repetidos,
 --       saldría del tablero en una cantidad finita de desplazamientos
+
+----------------------- FUNCION 3: cantidadDePasosParaSalir -----------------------
+-- Dado un tablero y una posición p, devuelve cuántas veces tiene que desplazarse 
+-- un AF para escapar del tablero si inicialmente lo colocamos en p. Esto incluye 
+-- al último desplazamiento.
+
+--- cambiarValor: Dada una lista, un elemento y una posición,
+--                   Reemplaza el elemento en dicha posición por el dado.
+--  Nota: Si el indice es mayor al tamaño de la lista,
+--        el elemento será agregado al final.
+--  Ej. cambiarValor [1,2,3] 6 2 ~> [1,6,3]
+cambiarValor :: [a] -> a -> Integer -> [a]
+cambiarValor [] e _ = [e]
+cambiarValor (x:xs) e 1 = e : xs
+cambiarValor (x:xs) e i = x : (cambiarValor xs e (i - 1))
+
+--- cambiarValorEnMatriz: Dada una matriz, un elemento y una posición,
+--                    Reemplaza el elemento en dicha posición por el dado.
+--  Ej. cambiarValorEnMatriz [[1, 2, 3],[4, 5, 6],[7, 8, 9]] 0 (2,3) ~> [[1,2,3],[4,5,0],[7,8,9]]
+cambiarValorEnMatriz :: [[a]] -> a -> Posicion -> [[a]]
+cambiarValorEnMatriz matriz e (i, j) = cambiarValor matriz (cambiarValor fila e j) i
+    where fila = iesimo matriz i
+
+--- rotarSentidoHorario: Dado un desplazamiento, devuelve ese desplazamiento rotado
+--                       en sentido horario.
+rotarSentidoHorario :: Desplazamiento -> Desplazamiento
+rotarSentidoHorario Arriba    = Derecha
+rotarSentidoHorario Derecha   = Abajo
+rotarSentidoHorario Abajo     = Izquierda
+rotarSentidoHorario Izquierda = Arriba
+
+--- actualizarPosicionEnTablero: Dado un tablero y una posicion,
+--                               devuelve un tablero con esa posicion actualizada
+--                               (rotada en sentido horario)
+actualizarPosicionEnTablero :: TableroAF -> Posicion -> TableroAF
+actualizarPosicionEnTablero tablero pos = cambiarValorEnMatriz tablero valorActualizado pos
+    where valorActualizado = rotarSentidoHorario (valor tablero pos)
+
+--- cantidadDePasosParaSalir: Dado un tablero y una posición p, devuelve cuántas
+--                            veces tiene que desplazarse un AF para escapar del
+--                            tablero si inicialmente lo colocamos en p. 
+--                            Esto incluye al último desplazamiento.
+cantidadDePasosParaSalir :: TableroAF -> Posicion -> Integer
+cantidadDePasosParaSalir tablero pos 
+    | not (posValida tablero pos) = 0           -- Si el AF ya esta fuera del tablero, termino el recorrido
+    | otherwise = 1 + cantidadDePasosParaSalir tableroActualizado siguientePos
+    where tableroActualizado = actualizarPosicionEnTablero tablero pos
+          flechaEnPosicion = valor tablero pos
+          siguientePos = desplazar pos flechaEnPosicion
