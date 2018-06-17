@@ -241,7 +241,33 @@ salidasEnKDesp campo k = cualesSonCaminosDeSalida campo (caminosPosiblesDeLongit
 --             cuya head es p.
 recorrido :: TableroAF -> Posicion -> [Posicion]
 recorrido tablero pos 
-        | not (posValida tablero pos) = []      -- Si el AF esta fuera del tablero, terminó su recorrido
+        | not (posValida tablero pos) = []      -- Si el AF esta fuera del tablero, terminó su recorrido.
         | otherwise = pos : (recorrido tablero siguientePos)
         where flechaEnPosicion = valor tablero pos  
               siguientePos = desplazar pos flechaEnPosicion 
+
+----------------------- FUNCION 2: escapaDelTablero -----------------------
+-- Dado un tablero y una posición p, determina si al colocar un AF en p, 
+-- el AF escapará del tablero o entrará en un loop infinito.
+
+-- tieneRepetidosAux: Guarda los elementos de una lista en una auxiliar, para ver si
+--                    en la original hay repetidos
+tieneRepetidosAux :: Eq a => [a] -> [a] -> Bool
+tieneRepetidosAux [] _ = False          -- Una lista vacía nunca tiene repetidos
+tieneRepetidosAux (x:xs) y = (x `contenidoEn` y) || (tieneRepetidosAux xs (x:y))
+
+--- tieneRepetidos: Dada una lista de elementos, dice alguno está repetido.
+--  Ej. tieneRepetidos [1, 2, 3]    ~> False
+--      tieneRepetidos [1, 2, 3, 1] ~> True
+tieneRepetidos :: Eq a => [a] -> Bool
+tieneRepetidos lista = tieneRepetidosAux lista []
+
+--- escapaDelTablero: Dado un tablero y una posición p, determina si al colocar
+--                    un AF en p, el AF escapará del tablero o entrará en un loop infinito.
+escapaDelTablero :: TableroAF -> Posicion -> Bool
+escapaDelTablero tablero pos = not (tieneRepetidos (recorrido tablero pos))
+
+-- Nota: Con una lista infinita el unico caso en el cual tieneRepetidos no termina,
+--       es en el que en esa lista no hay elementos repetidos.
+--       En escapaDelTablero eso no se da nunca. Pues si un camino no tiene repetidos,
+--       saldría del tablero en una cantidad finita de desplazamientos
