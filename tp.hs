@@ -227,6 +227,7 @@ cualesSonCaminosDeSalida campo (x:xs)
 salidasEnKDesp :: CampoMinado -> Integer -> Conjunto Camino 
 salidasEnKDesp campo k = cualesSonCaminosDeSalida campo (caminosPosiblesDeLongitud k)
 
+-- TODO: Testear bien parte A
 -----------------------------------------------------------------------
 --                              PARTE B
 -----------------------------------------------------------------------
