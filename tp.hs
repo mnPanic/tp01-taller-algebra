@@ -89,6 +89,14 @@ desplazar (a, b) Derecha   = (a, b + 1)
 desplazar (a, b) Abajo     = (a + 1, b)
 desplazar (a, b) Izquierda = (a, b - 1)
 
+-- Test de ejemplo
+testDesplazar :: Bool
+testDesplazar =
+    desplazar (2, 2) Arriba     == (1, 2) &&
+    desplazar (2, 2) Derecha    == (2, 3) &&
+    desplazar (2, 2) Abajo      == (3, 2) &&
+    desplazar (2, 2) Izquierda  == (2, 1)
+
 -- caminoValidoDesde: Determina si un camino se mantiene dentro de los
 --                    límites de un tablero a lo largo de su trayectoria,
 --                    comenzando en la posición dada.
