@@ -5,6 +5,10 @@
 -- INTEGRANTE 3: Ignacio Alonso Rehor 195/18
 -----------------------------------------------------------------------
 
+-----------------------------------------------------------------------
+-- Definiciones, funciones y ejemplos dados                          
+-----------------------------------------------------------------------
+
 data Desplazamiento = Arriba | Abajo | Izquierda | Derecha deriving (Show, Eq)
 
 type Conjunto a = [a]
@@ -12,6 +16,7 @@ type Camino = [Desplazamiento]
 type Posicion = (Integer,Integer)
 type Tablero a = [[a]]
 type CampoMinado = Tablero Bool
+type TableroAF = Tablero Desplazamiento
 
 -- Devuelve el tamaño de un tablero.
 tamano :: Tablero a -> Integer
@@ -58,11 +63,24 @@ campo1 = [ [False, False, True],
            [True,  False, False],
            [True,  True,  False] ]
 
+-- TableroAF de prueba, sin ciclos.
+taf1 :: TableroAF
+taf1 = [ [Derecha,  Derecha, Abajo],
+         [Arriba, Izquierda, Abajo],
+         [Arriba, Izquierda, Abajo] ]
+
+-- TableroAF de prueba, con ciclos.
+taf2 :: TableroAF
+taf2 = [ [Derecha,       Abajo, Abajo],
+         [Arriba,    Izquierda, Abajo],
+         [Izquierda, Izquierda, Izquierda] ]
 
 -----------------------------------------------------------------------
--- PARTE A
+--                              PARTE A
 -----------------------------------------------------------------------
--- funcion 1
+------------------- | Implementación de funciones | -------------------
+
+----------------------- FUNCION 1: caminoValido -----------------------
 
 -- desplazar: Dada una posición y un desplazamiento devuelve la posición resultante.
 desplazar :: Posicion -> Desplazamiento -> Posicion
@@ -71,20 +89,22 @@ desplazar (a, b) Derecha   = (a, b + 1)
 desplazar (a, b) Abajo     = (a + 1, b)
 desplazar (a, b) Izquierda = (a, b - 1)
 
--- caminoValidoDesde: Determina si un camino se mantiene dentro de los límites de un tablero a lo largo de su trayectoria,
---                           comenzando en la posición dada.
+-- caminoValidoDesde: Determina si un camino se mantiene dentro de los
+--                    límites de un tablero a lo largo de su trayectoria,
+--                    comenzando en la posición dada.
 caminoValidoDesde :: Tablero a -> Camino -> Posicion -> Bool
 caminoValidoDesde tablero [] pos = posValida tablero pos
 caminoValidoDesde tablero (d:ds) pos = (posValida tablero pos) && (caminoValidoDesde tablero ds siguientePos)
     where siguientePos = desplazar pos d
 
--- Determina si un camino se mantiene dentro de los límites del tablero a lo largo de su trayectoria, 
--- asumiendo que se comenzará por la posición (1, 1).
+--- caminoValido: Determina si un camino se mantiene dentro de los límites
+--                del tablero a lo largo de su trayectoria, 
+--                asumiendo que se comenzará por la posición (1, 1).
 caminoValido :: Tablero a -> Camino -> Bool
 caminoValido tablero camino = caminoValidoDesde tablero camino (1, 1)
 
 
--- funcion 2 --
+----------------------- FUNCION 2: caminoDeSalida -----------------------
 
 --- posicionSalida: Dado un tablero, devuelve la posicion de salida.
 posicionSalida :: Tablero a -> Posicion
@@ -96,7 +116,7 @@ hayMina :: CampoMinado -> Posicion -> Bool
 hayMina campo pos = (valor campo pos)   -- La presencia de minas esta determinada por un "True"
 
 --- caminoDeSalidaDesde: Determina si un RAE, comenzando en la posicion dada, al seguir el camino dado,
---                              llega a la posicion (n, n) sin pisar ninguna mina.
+--                       llega a la posicion (n, n) sin pisar ninguna mina.
 caminoDeSalidaDesde :: CampoMinado -> Camino -> Posicion -> Bool
 caminoDeSalidaDesde campo [] pos = esPosicionSalida && (not (hayMina campo pos))
     where esPosicionSalida = (pos == (posicionSalida campo))
@@ -111,7 +131,7 @@ caminoDeSalida :: CampoMinado -> Camino -> Bool
 caminoDeSalida campo camino = caminoDeSalidaDesde campo camino (1, 1)
 
 
--- funcion 3 --
+----------------------- FUNCION 3: caminoDeSalidaSinRepetidos -----------------------
 
 --- contiene: Dado una lista de elementos y un elemento, dice si ese elemento pertenece a la lista.
 contenidoEn :: Eq a => a -> [a] -> Bool
@@ -137,19 +157,6 @@ caminoDeSalidaSinRepetidos :: CampoMinado -> Camino -> Bool
 caminoDeSalidaSinRepetidos campo camino = (caminoDeSalida campo camino) && (caminoSinPosicionesRepetidas camino)
 
 -----------------------------------------------------------------------
--- PARTE B
+--                              PARTE B
 -----------------------------------------------------------------------
-
-type TableroAF = Tablero Desplazamiento
-
--- TableroAF de prueba, sin ciclos.
-taf1 :: TableroAF
-taf1 = [ [Derecha,  Derecha, Abajo],
-         [Arriba, Izquierda, Abajo],
-         [Arriba, Izquierda, Abajo] ]
-
--- TableroAF de prueba, con ciclos.
-taf2 :: TableroAF
-taf2 = [ [Derecha,       Abajo, Abajo],
-         [Arriba,    Izquierda, Abajo],
-         [Izquierda, Izquierda, Izquierda] ]
+------------------- | Implementación de funciones | -------------------
