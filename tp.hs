@@ -245,8 +245,6 @@ caminoDeSalidaSinRepetidos :: CampoMinado -> Camino -> Bool
 caminoDeSalidaSinRepetidos campo camino = (caminoDeSalida campo camino) && (caminoSinPosicionesRepetidas camino)
 
 -------------------------- | Casos de test | --------------------------
---- | Elementos de prueba | ---
-
 --- | Funciones | ---
 --- contenidoEn
 testContenidoEn :: Bool
@@ -334,7 +332,75 @@ cualesSonCaminosDeSalida campo (x:xs)
 salidasEnKDesp :: CampoMinado -> Integer -> Conjunto Camino 
 salidasEnKDesp campo k = cualesSonCaminosDeSalida campo (caminosPosiblesDeLongitud k)
 
--- TODO: Testear bien parte A
+-------------------------- | Casos de test | --------------------------
+--- | Funciones | ---
+--- listaDeElementos
+testListaDeElementos :: Bool
+testListaDeElementos =
+    listaDeElementos [1, 2, 3]            == [[1], [2], [3]] &&
+    listaDeElementos [Derecha, Izquierda] == [[Derecha], [Izquierda]]
+
+--- agregarATodasLasListas
+testAgregarATodasLasListas :: Bool
+testAgregarATodasLasListas =
+    agregarATodasLasListas 1 [[0], [2]]              == [[1,0], [1,2]] &&
+    agregarATodasLasListas 1 [[]]                    == [[1]]          &&
+    agregarATodasLasListas 1 []                      == []             &&
+    agregarATodasLasListas Derecha [[Izquierda], []] == [[Derecha, Izquierda], [Derecha]]
+
+--- agregarTodos
+testAgregarTodos :: Bool
+testAgregarTodos =
+    agregarTodos [0, 1] [[2],[3],[4]]               == [[0,2],[0,3],[0,4],[1,2],[1,3],[1,4]] &&
+    agregarTodos [Derecha, Izquierda] [[Izquierda]] == [[Derecha, Izquierda], [Izquierda, Izquierda]]
+
+--- variaciones
+testVariaciones :: Bool
+testVariaciones =
+    variaciones [4, 7] 2          == [[4,4], [4,7], [7,4], [7,7]] &&
+    variaciones [1] 0             == []                           &&
+    variaciones [Arriba, Abajo] 2 == [[Arriba,Arriba],[Arriba,Abajo],[Abajo,Arriba],[Abajo,Abajo]]
+
+--- caminosPosiblesDeLongitud
+testCaminosPosiblesDeLongitud :: Bool
+testCaminosPosiblesDeLongitud =
+    caminosPosiblesDeLongitud 1 == [[Arriba], [Derecha], [Abajo], [Izquierda]] &&
+    caminosPosiblesDeLongitud 2 == [[Arriba,Arriba],[Arriba,Derecha],[Arriba,Abajo],[Arriba,Izquierda],
+                                    [Derecha,Arriba],[Derecha,Derecha],[Derecha,Abajo],[Derecha,Izquierda],
+                                    [Abajo,Arriba],[Abajo,Derecha],[Abajo,Abajo],[Abajo,Izquierda],
+                                    [Izquierda,Arriba],[Izquierda,Derecha],[Izquierda,Abajo],[Izquierda,Izquierda]]
+
+--- cualesSonCaminosDeSalida
+testCualesSonCaminosDeSalida :: Bool
+testCualesSonCaminosDeSalida =
+    cualesSonCaminosDeSalida campoPrueba []                                                   == []              &&
+    cualesSonCaminosDeSalida campoPrueba [caminoPrueba2, [Abajo]]                             == [caminoPrueba2] &&
+    cualesSonCaminosDeSalida campoPrueba [caminoPrueba2, caminoPrueba2++[Izquierda, Derecha]] == [caminoPrueba2, caminoPrueba2++[Izquierda, Derecha]]
+
+--- salidasEnKDesp
+testSalidasEnKDesp :: Bool
+testSalidasEnKDesp =
+    salidasEnKDesp campo1 1 == []                              &&
+    salidasEnKDesp campo1 2 == []                              &&
+    salidasEnKDesp campo1 3 == []                              &&
+    salidasEnKDesp campo1 4 == [[Derecha,Abajo,Derecha,Abajo]] &&
+    salidasEnKDesp campo1 5 == []                              &&
+    salidasEnKDesp campo1 6 == [[Derecha,Abajo,Arriba,Abajo,Derecha,Abajo], -- Nota, el orden de los caminos fue cambiado con respecto al del documento
+                                [Derecha,Abajo,Derecha,Abajo,Arriba,Abajo],
+                                [Derecha,Abajo,Derecha,Izquierda,Derecha,Abajo],
+                                [Derecha,Izquierda,Derecha,Abajo,Derecha,Abajo]]
+
+--- Funcion 4 general
+testA_iv :: Bool
+testA_iv =
+    testSalidasEnKDesp            &&
+    testCualesSonCaminosDeSalida  &&
+    testCaminosPosiblesDeLongitud &&
+    testVariaciones               &&
+    testAgregarTodos              &&
+    testAgregarATodasLasListas    &&
+    testListaDeElementos
+
 -----------------------------------------------------------------------
 --                              PARTE B
 -----------------------------------------------------------------------
