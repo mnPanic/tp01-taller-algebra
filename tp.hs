@@ -232,7 +232,6 @@ caminoSinPosicionesRepetidasDesde :: Camino -> Posicion -> Conjunto Posicion -> 
 caminoSinPosicionesRepetidasDesde [] _ _ = True
 caminoSinPosicionesRepetidasDesde (d:ds) pos posiciones = (not (siguientePos `contenidoEn` posiciones)) && (caminoSinPosicionesRepetidasDesde ds siguientePos (pos:posiciones))
     where siguientePos = desplazar pos d
-    -- TODO: ponerle un where
 
 --- caminoSinPosicionesRepetidas: Dado un camino, se fija si tiene posiciones repetidas.
 caminoSinPosicionesRepetidas :: Camino -> Bool
