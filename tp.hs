@@ -232,3 +232,16 @@ salidasEnKDesp campo k = cualesSonCaminosDeSalida campo (caminosPosiblesDeLongit
 --                              PARTE B
 -----------------------------------------------------------------------
 ------------------- | Implementación de funciones | -------------------
+
+----------------------- FUNCION 1: recorrido -----------------------
+
+--- recorrido: Dado un tablero y una posición p, devuelve una lista que contiene
+--             las posiciones por las que pasará un AF si se lo coloca inicialmente
+--             sobre p. Tener en cuenta que puede tratarse de una lista infinita,
+--             cuya head es p.
+recorrido :: TableroAF -> Posicion -> [Posicion]
+recorrido tablero pos 
+        | not (posValida tablero pos) = []      -- Si el AF esta fuera del tablero, terminó su recorrido
+        | otherwise = pos : (recorrido tablero siguientePos)
+        where flechaEnPosicion = valor tablero pos  
+              siguientePos = desplazar pos flechaEnPosicion 
