@@ -1,12 +1,8 @@
-------- TODO IMPORTANTE: !!! WALL E DE ASCII
-
-
-
 -----------------------------------------------------------------------
 -- Nombre y LU/DNI de los integrantes del grupo:
--- INTEGRANTE 1: Manuel Panichelli 72/18
--- INTEGRANTE 2: Vladimir Pomsztein 364/18
--- INTEGRANTE 3: Ignacio Alonso Rehor 195/18
+-- INTEGRANTE 1: Manuel Panichelli    LU: 72/18
+-- INTEGRANTE 2: Vladimir Pomsztein   LU: 364/18
+-- INTEGRANTE 3: Ignacio Alonso Rehor LU: 195/18
 -----------------------------------------------------------------------
 
 -----------------------------------------------------------------------
