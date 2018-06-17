@@ -77,14 +77,6 @@ desplazar (a, b) Derecha   = (a, b + 1)
 desplazar (a, b) Abajo     = (a + 1, b)
 desplazar (a, b) Izquierda = (a, b - 1)
 
--- Test de ejemplo
-testDesplazar :: Bool
-testDesplazar =
-    desplazar (2, 2) Arriba     == (1, 2) &&
-    desplazar (2, 2) Derecha    == (2, 3) &&
-    desplazar (2, 2) Abajo      == (3, 2) &&
-    desplazar (2, 2) Izquierda  == (2, 1)
-
 -- caminoValidoDesde: Determina si un camino se mantiene dentro de los
 --                    límites de un tablero a lo largo de su trayectoria,
 --                    comenzando en la posición dada.
@@ -99,6 +91,53 @@ caminoValidoDesde tablero (d:ds) pos = (posValida tablero pos) && (caminoValidoD
 caminoValido :: Tablero a -> Camino -> Bool
 caminoValido tablero camino = caminoValidoDesde tablero camino (1, 1)
 
+-------------------------- | Casos de test | --------------------------
+--- | Elementos de prueba | ---
+tableroPrueba :: Tablero Integer
+tableroPrueba = [ [0, 0, 0],
+                  [0, 0, 0],
+                  [0, 0, 0] ]
+
+caminoPrueba1 :: Camino
+caminoPrueba1 = [Derecha, Abajo, Derecha, Izquierda, Abajo, Derecha]
+
+--- | Funciones | ---
+--- desplazar
+testDesplazar :: Bool
+testDesplazar =
+    desplazar (2, 2) Arriba     == (1, 2) &&
+    desplazar (2, 2) Derecha    == (2, 3) &&
+    desplazar (2, 2) Abajo      == (3, 2) &&
+    desplazar (2, 2) Izquierda  == (2, 1)
+
+
+--- caminoValidoDesde
+testCaminoValidoDesde :: Bool
+testCaminoValidoDesde =
+    caminoValidoDesde tableroPrueba [] (4, 1)                   == False && -- Comenzando fuera del tablero nunca es un camino valido
+    caminoValidoDesde tableroPrueba caminoPrueba1 (1, 1)        == True  &&
+    caminoValidoDesde tableroPrueba [Arriba] (1, 1)             == False &&
+    caminoValidoDesde tableroPrueba [Izquierda] (1, 1)          == False &&
+    caminoValidoDesde tableroPrueba [Abajo] (3, 3)              == False &&
+    caminoValidoDesde tableroPrueba [Derecha] (3,3)             == False &&
+    caminoValidoDesde tableroPrueba [Derecha, Izquierda] (1, 3) == False    -- Entrar y salir de los limites del tablero no es valido
+    
+--- caminoValido
+testCaminoValido :: Bool
+testCaminoValido =
+    caminoValido campo1 []                 == True  &&
+    caminoValido campo1 [Izquierda]        == False &&
+    caminoValido campo1 camino1            == True  &&
+    caminoValido campo1 camino2            == True  &&
+    caminoValido campo1 (Arriba:camino1)   == False &&
+    caminoValido campo1 (camino2++[Abajo]) == False
+
+-- Funcion i) completa
+testA_i :: Bool
+testA_i =
+    testCaminoValido      == True &&
+    testCaminoValidoDesde == True &&
+    testDesplazar         == True
 
 ----------------------- FUNCION 2: caminoDeSalida -----------------------
 -- Determina si un RAE, comenzando en la posición (1, 1), al seguir el
