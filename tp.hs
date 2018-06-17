@@ -10,7 +10,7 @@
 -----------------------------------------------------------------------
 
 -----------------------------------------------------------------------
--- Definiciones, funciones y ejemplos dados                          
+-- Definiciones y funciones dadas          
 -----------------------------------------------------------------------
 
 data Desplazamiento = Arriba | Abajo | Izquierda | Derecha deriving (Show, Eq)
@@ -40,21 +40,6 @@ iesimo (x:xs) n = iesimo xs (n-1)
 posValida :: Tablero a -> Posicion -> Bool
 posValida t (i,j) = 1<=i && i<=n && 1<=j && j<=n
     where n = tamano t
-    
-    
--- Funciones de ejemplo, solo para ilustrar cómo usar los tipos definidos arriba.
--- Determina si un desplazamiento es vertical (Arriba o Abajo).
-esVertical :: Desplazamiento -> Bool
-esVertical Arriba = True
-esVertical Abajo = True
-esVertical _ = False
-
--- Cuenta la cantidad de Desplazamientos verticales en un Camino.
-contarDesplazamientosVerticales :: Camino -> Integer
-contarDesplazamientosVerticales [] = 0
-contarDesplazamientosVerticales (x:xs) | esVertical x = 1 + resto
-                                       | otherwise    = resto
-  where resto = contarDesplazamientosVerticales xs
 
 -- Caminos de prueba.
 camino1 = [Derecha, Abajo, Izquierda, Arriba, Abajo, Abajo, Derecha, Derecha]
