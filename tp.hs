@@ -1,3 +1,7 @@
+------- TODO IMPORTANTE: !!! WALL E DE ASCII
+
+
+
 -----------------------------------------------------------------------
 -- Nombre y LU/DNI de los integrantes del grupo:
 -- INTEGRANTE 1: Manuel Panichelli 72/18
