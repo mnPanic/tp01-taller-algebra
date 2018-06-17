@@ -81,6 +81,9 @@ taf2 = [ [Derecha,       Abajo, Abajo],
 ------------------- | Implementación de funciones | -------------------
 
 ----------------------- FUNCION 1: caminoValido -----------------------
+-- Determina si un camino se mantiene dentro de los límites del tablero 
+-- a lo largo de su trayectoria, asumiendo que se comenzará 
+-- por la posición (1, 1).
 
 -- desplazar: Dada una posición y un desplazamiento devuelve la posición resultante.
 desplazar :: Posicion -> Desplazamiento -> Posicion
@@ -113,6 +116,8 @@ caminoValido tablero camino = caminoValidoDesde tablero camino (1, 1)
 
 
 ----------------------- FUNCION 2: caminoDeSalida -----------------------
+-- Determina si un RAE, comenzando en la posición (1, 1), al seguir el
+-- camino dado, llega a la posición (n, n) sin pisar ninguna mina.
 
 --- posicionSalida: Dado un tablero, devuelve la posicion de salida.
 posicionSalida :: Tablero a -> Posicion
@@ -140,6 +145,9 @@ caminoDeSalida campo camino = caminoDeSalidaDesde campo camino (1, 1)
 
 
 ----------------------- FUNCION 3: caminoDeSalidaSinRepetidos -----------------------
+-- Determina si un RAE, comenzando en la posición (1, 1), al seguir el camino dado, 
+-- llega a la posición (n, n) sin pisar ninguna mina y sin pasar dos veces
+-- por una misma posición.
 
 --- contiene: Dado una lista de elementos y un elemento, dice si ese elemento pertenece a la lista.
 contenidoEn :: Eq a => a -> [a] -> Bool
