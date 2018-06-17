@@ -167,6 +167,54 @@ caminoDeSalidaDesde campo (d:ds) pos
 caminoDeSalida :: CampoMinado -> Camino -> Bool
 caminoDeSalida campo camino = caminoDeSalidaDesde campo camino (1, 1)
 
+-------------------------- | Casos de test | --------------------------
+--- | Elementos de prueba | ---
+campoPrueba :: CampoMinado
+campoPrueba = [ [False, False, True],
+                [False, True,  True],
+                [False, False, False] ]
+
+caminoPrueba2 :: Camino
+caminoPrueba2 = [Abajo, Abajo, Derecha, Derecha]
+
+--- | Funciones | ---
+--- posicionSalida
+testPosicionSalida :: Bool
+testPosicionSalida =
+    posicionSalida campoPrueba == (3, 3) &&
+    posicionSalida []          == (0, 0)
+
+--- hayMina
+testHayMina :: Bool
+testHayMina = 
+    hayMina campoPrueba (1, 1) == False &&
+    hayMina campoPrueba (2, 2) == True  &&
+    hayMina campoPrueba (3, 3) == False
+
+--- caminoDeSalidaDesde
+testCaminoDeSalidaDesde :: Bool
+testCaminoDeSalidaDesde =
+    caminoDeSalidaDesde campoPrueba caminoPrueba2 (1, 1)                         == True  &&
+    caminoDeSalidaDesde campoPrueba [] (3, 3)                                    == True  &&
+    caminoDeSalidaDesde campoPrueba [Abajo] (2,3)                                == False &&
+    caminoDeSalidaDesde campoPrueba [] (4, 4)                                    == False &&
+    caminoDeSalidaDesde campoPrueba (caminoPrueba2++[Izquierda]) (1, 1)          == False &&
+    caminoDeSalidaDesde campoPrueba (caminoPrueba2++[Derecha, Izquierda]) (1, 1) == False
+    
+--- caminoDeSalida
+testCaminoDeSalida :: Bool
+testCaminoDeSalida =
+    caminoDeSalida campo1 camino1 == False &&
+    caminoDeSalida campo1 camino2 == True  &&
+    caminoDeSalida campo1 camino3 == True
+
+--- Funcion 2 completa
+testA_ii :: Bool
+testA_ii =
+    testCaminoDeSalida      == True &&
+    testCaminoDeSalidaDesde == True &&
+    testHayMina             == True &&
+    testPosicionSalida      == True
 
 ----------------------- FUNCION 3: caminoDeSalidaSinRepetidos -----------------------
 -- Determina si un RAE, comenzando en la posición (1, 1), al seguir el camino dado, 
