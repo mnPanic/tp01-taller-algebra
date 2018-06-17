@@ -243,6 +243,40 @@ caminoSinPosicionesRepetidas camino = caminoSinPosicionesRepetidasDesde camino (
 caminoDeSalidaSinRepetidos :: CampoMinado -> Camino -> Bool
 caminoDeSalidaSinRepetidos campo camino = (caminoDeSalida campo camino) && (caminoSinPosicionesRepetidas camino)
 
+-------------------------- | Casos de test | --------------------------
+--- | Elementos de prueba | ---
+
+--- | Funciones | ---
+--- contenidoEn
+testContenidoEn :: Bool
+testContenidoEn =
+    contenidoEn 1 [1, 2, 3] == True &&
+    contenidoEn 0 [1, 2, 3] == False
+
+-- Nota: No hace falta testear caminoSinPosicionesRepetidasDesde ya que la posicion de inicio no afecta
+--- caminoSinPosicionesRepetidas
+testCaminoSinPosicionesRepetidas :: Bool
+testCaminoSinPosicionesRepetidas =
+    caminoSinPosicionesRepetidas caminoPrueba1 == False &&
+    caminoSinPosicionesRepetidas caminoPrueba2 == True  &&
+    caminoSinPosicionesRepetidas camino1       == False &&
+    caminoSinPosicionesRepetidas camino2       == True  &&
+    caminoSinPosicionesRepetidas camino3       == False
+
+--- testCaminoDeSalidaSinRepetidos
+testCaminoDeSalidaSinRepetidos :: Bool
+testCaminoDeSalidaSinRepetidos =
+    caminoDeSalidaSinRepetidos campo1 camino1 == False &&
+    caminoDeSalidaSinRepetidos campo1 camino2 == True  &&
+    caminoDeSalidaSinRepetidos campo1 camino3 == False
+
+--- Funcion 3 completa
+testA_iii :: Bool
+testA_iii = 
+    testContenidoEn                  &&
+    testCaminoSinPosicionesRepetidas &&
+    testCaminoDeSalidaSinRepetidos
+
 ----------------------- FUNCION 4: salidasEnKDesp -----------------------
 -- Dados un campo minado y un número natural k, devuelve el conjunto de 
 -- todos los caminos de longitud k que lleven a un RAE desde (1, 1)
