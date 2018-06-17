@@ -221,7 +221,7 @@ testA_ii =
 -- llega a la posición (n, n) sin pisar ninguna mina y sin pasar dos veces
 -- por una misma posición.
 
---- contiene: Dado una lista de elementos y un elemento, dice si ese elemento pertenece a la lista.
+--- contenidoEn: Dado una lista de elementos y un elemento, dice si ese elemento pertenece a la lista.
 contenidoEn :: Eq a => a -> [a] -> Bool
 contenidoEn n l = elem n l
 
