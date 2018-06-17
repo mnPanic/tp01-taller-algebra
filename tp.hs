@@ -172,6 +172,61 @@ caminoSinPosicionesRepetidas camino = caminoSinPosicionesRepetidasDesde camino (
 caminoDeSalidaSinRepetidos :: CampoMinado -> Camino -> Bool
 caminoDeSalidaSinRepetidos campo camino = (caminoDeSalida campo camino) && (caminoSinPosicionesRepetidas camino)
 
+----------------------- FUNCION 4: salidasEnKDesp -----------------------
+-- Dados un campo minado y un número natural k, devuelve el conjunto de 
+-- todos los caminos de longitud k que lleven a un RAE desde (1, 1)
+-- hasta (n, n), sin pisar ninguna mina.
+
+--- listaDeElementos: Dado un conjunto de elementos, crea un conjunto de listas con dichos elementos.
+--  Ej. listaDeElementos [1, 2, 3] ~> [[1], [2], [3]]
+listaDeElementos :: Conjunto a -> Conjunto [a]
+listaDeElementos [] = []
+listaDeElementos (x:xs) = [[x]]++(listaDeElementos xs)
+
+--- agregarATodasLasListas: Dado un elemento y una lista de listas, agrega ese elemento
+--                          a todas las listas.
+--  Ej. agregarATodasLasListas 1 [[0], [2]] ~> [[1,0],[1,2]]
+agregarATodasLasListas :: a -> [[a]] -> [[a]] 
+agregarATodasLasListas _ [] = []
+agregarATodasLasListas n (x:xs) = [n:x]++(agregarATodasLasListas n xs)
+
+--- agregarTodos: Dado una lista y un conjunto de listas, agrega por separado cada elemento de la lista
+--                a todas las listas del conjunto.
+-- Ej. agregarTodos [0, 1] [[2],[3],[4]] ~> [[0,2],[0,3],[0,4],[1,2],[1,3],[1,4]]
+agregarTodos :: [a] -> Conjunto [a] -> [[a]]
+agregarTodos [] conjunto = []
+agregarTodos (x:xs) conjunto = (agregarATodasLasListas x conjunto)++(agregarTodos xs conjunto)
+
+--- variaciones: Dado un conjunto de elementos y una longitud, crea todas las posibles
+--               listas de dicha longitud con los elementos dados.
+--  Ej. variaciones [4, 7] 2 ~> [[4,4], [4,7], [7,4], [7,7]]
+variaciones :: Conjunto a -> Integer -> Conjunto [a]
+variaciones elementos 1 = listaDeElementos elementos
+variaciones elementos n = agregarTodos elementos variacionAnterior
+                        where variacionAnterior = variaciones elementos (n - 1)
+
+--- caminosPosiblesDeLongitud: Dado una longitud, devuelve un conjunto de todos los caminos
+--                             posibles de dicha longitud.
+caminosPosiblesDeLongitud :: Integer -> Conjunto Camino
+caminosPosiblesDeLongitud k = variaciones [Arriba, Derecha, Abajo, Izquierda] k
+
+--- cualesSonCaminosDeSalida: Dado un conjunto de caminos y un campo minado,
+--                            devuelve todos los caminos del conjunto que son caminos de salida
+--                            (al partir de la posición (1, 1), llegan a la posición (n, n) del tablero
+--                            sin pisar ninguna mina)
+cualesSonCaminosDeSalida :: CampoMinado -> Conjunto Camino -> Conjunto Camino
+cualesSonCaminosDeSalida _ [] = []
+cualesSonCaminosDeSalida campo (x:xs) 
+    | caminoDeSalida campo x = x : caminosRestantes
+    | otherwise = caminosRestantes
+    where caminosRestantes = (cualesSonCaminosDeSalida campo xs)
+
+--- salidasEnKDesp: Dados un campo minado y un número natural k,
+--                  devuelve el conjunto de todos los caminos de longitud k
+--                  que lleven a un RAE desde (1, 1) hasta (n, n), sin pisar ninguna mina.
+salidasEnKDesp :: CampoMinado -> Integer -> Conjunto Camino 
+salidasEnKDesp campo k = cualesSonCaminosDeSalida campo (caminosPosiblesDeLongitud k)
+
 -----------------------------------------------------------------------
 --                              PARTE B
 -----------------------------------------------------------------------
