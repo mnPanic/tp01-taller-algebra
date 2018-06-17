@@ -135,9 +135,9 @@ testCaminoValido =
 -- Funcion i) completa
 testA_i :: Bool
 testA_i =
-    testCaminoValido      == True &&
-    testCaminoValidoDesde == True &&
-    testDesplazar         == True
+    testDesplazar         &&
+    testCaminoValidoDesde &&
+    testCaminoValido
 
 ----------------------- FUNCION 2: caminoDeSalida -----------------------
 -- Determina si un RAE, comenzando en la posición (1, 1), al seguir el
@@ -211,10 +211,11 @@ testCaminoDeSalida =
 --- Funcion 2 completa
 testA_ii :: Bool
 testA_ii =
-    testCaminoDeSalida      == True &&
-    testCaminoDeSalidaDesde == True &&
-    testHayMina             == True &&
-    testPosicionSalida      == True
+    testPosicionSalida      &&
+    testHayMina             &&
+    testCaminoDeSalidaDesde &&    
+    testCaminoDeSalida
+          
 
 ----------------------- FUNCION 3: caminoDeSalidaSinRepetidos -----------------------
 -- Determina si un RAE, comenzando en la posición (1, 1), al seguir el camino dado, 
