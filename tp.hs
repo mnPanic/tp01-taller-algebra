@@ -6,7 +6,7 @@
 -----------------------------------------------------------------------
 
 -----------------------------------------------------------------------
--- Definiciones y funciones dadas          
+--                   Definiciones y funciones dadas
 -----------------------------------------------------------------------
 
 data Desplazamiento = Arriba | Abajo | Izquierda | Derecha deriving (Show, Eq)
@@ -63,9 +63,10 @@ taf2 = [ [Derecha,       Abajo, Abajo],
 -----------------------------------------------------------------------
 --                              PARTE A
 -----------------------------------------------------------------------
-------------------- | Implementación de funciones | -------------------
+-------------------------- | Implementación | -------------------------
 
 ----------------------- FUNCION 1: caminoValido -----------------------
+-- ESPECIFICACIÓN --
 -- Determina si un camino se mantiene dentro de los límites del tablero 
 -- a lo largo de su trayectoria, asumiendo que se comenzará 
 -- por la posición (1, 1).
@@ -101,7 +102,7 @@ tableroPrueba = [ [0, 0, 0],
 caminoPrueba1 :: Camino
 caminoPrueba1 = [Derecha, Abajo, Derecha, Izquierda, Abajo, Derecha]
 
---- | Funciones | ---
+--- | FUNCION 1 | ---
 --- desplazar
 testDesplazar :: Bool
 testDesplazar =
@@ -132,7 +133,7 @@ testCaminoValido =
     caminoValido campo1 (Arriba:camino1)   == False &&
     caminoValido campo1 (camino2++[Abajo]) == False
 
--- Funcion i) completa
+-- Funcion i) general
 testA_i :: Bool
 testA_i =
     testDesplazar         &&
@@ -140,6 +141,7 @@ testA_i =
     testCaminoValido
 
 ----------------------- FUNCION 2: caminoDeSalida -----------------------
+-- ESPECIFICACIÓN --
 -- Determina si un RAE, comenzando en la posición (1, 1), al seguir el
 -- camino dado, llega a la posición (n, n) sin pisar ninguna mina.
 
@@ -177,7 +179,7 @@ campoPrueba = [ [False, False, True],
 caminoPrueba2 :: Camino
 caminoPrueba2 = [Abajo, Abajo, Derecha, Derecha]
 
---- | Funciones | ---
+--- | FUNCION 2 | ---
 --- posicionSalida
 testPosicionSalida :: Bool
 testPosicionSalida =
@@ -208,7 +210,7 @@ testCaminoDeSalida =
     caminoDeSalida campo1 camino2 == True  &&
     caminoDeSalida campo1 camino3 == True
 
---- Funcion 2 completa
+--- Funcion ii) general
 testA_ii :: Bool
 testA_ii =
     testPosicionSalida      &&
@@ -216,8 +218,8 @@ testA_ii =
     testCaminoDeSalidaDesde &&    
     testCaminoDeSalida
           
-
 ----------------------- FUNCION 3: caminoDeSalidaSinRepetidos -----------------------
+-- ESPECIFICACIÓN --
 -- Determina si un RAE, comenzando en la posición (1, 1), al seguir el camino dado, 
 -- llega a la posición (n, n) sin pisar ninguna mina y sin pasar dos veces
 -- por una misma posición.
@@ -245,7 +247,7 @@ caminoDeSalidaSinRepetidos :: CampoMinado -> Camino -> Bool
 caminoDeSalidaSinRepetidos campo camino = (caminoDeSalida campo camino) && (caminoSinPosicionesRepetidas camino)
 
 -------------------------- | Casos de test | --------------------------
---- | Funciones | ---
+--- | FUNCION 3 | ---
 --- contenidoEn
 testContenidoEn :: Bool
 testContenidoEn =
@@ -269,7 +271,7 @@ testCaminoDeSalidaSinRepetidos =
     caminoDeSalidaSinRepetidos campo1 camino2 == True  &&
     caminoDeSalidaSinRepetidos campo1 camino3 == False
 
---- Funcion 3 completa
+--- Funcion iii) general
 testA_iii :: Bool
 testA_iii = 
     testContenidoEn                  &&
@@ -277,6 +279,7 @@ testA_iii =
     testCaminoDeSalidaSinRepetidos
 
 ----------------------- FUNCION 4: salidasEnKDesp -----------------------
+-- ESPECIFICACIÓN --
 -- Dados un campo minado y un número natural k, devuelve el conjunto de 
 -- todos los caminos de longitud k que lleven a un RAE desde (1, 1)
 -- hasta (n, n), sin pisar ninguna mina.
@@ -333,7 +336,7 @@ salidasEnKDesp :: CampoMinado -> Integer -> Conjunto Camino
 salidasEnKDesp campo k = cualesSonCaminosDeSalida campo (caminosPosiblesDeLongitud k)
 
 -------------------------- | Casos de test | --------------------------
---- | Funciones | ---
+--- | FUNCION 4 | ---
 --- listaDeElementos
 testListaDeElementos :: Bool
 testListaDeElementos =
@@ -390,7 +393,7 @@ testSalidasEnKDesp =
                                 [Derecha,Abajo,Derecha,Izquierda,Derecha,Abajo],
                                 [Derecha,Izquierda,Derecha,Abajo,Derecha,Abajo]]
 
---- Funcion 4 general
+--- Funcion iv) general
 testA_iv :: Bool
 testA_iv =
     testSalidasEnKDesp            &&
@@ -404,7 +407,7 @@ testA_iv =
 -----------------------------------------------------------------------
 --                              PARTE B
 -----------------------------------------------------------------------
-------------------- | Implementación de funciones | -------------------
+-------------------------- | Implementación | -------------------------
 
 ----------------------- FUNCION 1: recorrido -----------------------
 
@@ -420,6 +423,7 @@ recorrido tablero pos
               siguientePos = desplazar pos flechaEnPosicion 
 
 ----------------------- FUNCION 2: escapaDelTablero -----------------------
+-- ESPECIFICACIÓN --
 -- Dado un tablero y una posición p, determina si al colocar un AF en p, 
 -- el AF escapará del tablero o entrará en un loop infinito.
 
@@ -446,6 +450,7 @@ escapaDelTablero tablero pos = not (tieneRepetidos (recorrido tablero pos))
 --       saldría del tablero en una cantidad finita de desplazamientos
 
 ----------------------- FUNCION 3: cantidadDePasosParaSalir -----------------------
+-- ESPECIFICACIÓN --
 -- Dado un tablero y una posición p, devuelve cuántas veces tiene que desplazarse 
 -- un AF para escapar del tablero si inicialmente lo colocamos en p. Esto incluye 
 -- al último desplazamiento.
