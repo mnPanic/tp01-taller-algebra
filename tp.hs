@@ -401,6 +401,15 @@ testA_iv =
     testAgregarATodasLasListas    &&
     testListaDeElementos
 
+
+---- Parte A en general
+testA :: Bool
+testA =
+    testA_i   &&
+    testA_ii  &&
+    testA_iii &&
+    testA_iv
+
 -----------------------------------------------------------------------
 --                              PARTE B
 -----------------------------------------------------------------------
