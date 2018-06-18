@@ -6,6 +6,46 @@
 -----------------------------------------------------------------------
 
 -----------------------------------------------------------------------
+--                        Formato del archivo
+-----------------------------------------------------------------------
+-- El archivo tiene el siguiente formato:
+--
+--- | Definiciones y funciones dadas (por los profesores)
+--- | Parte A
+---- | Implementacion
+----- | Funcion x
+------ | Especificacion
+------ | Resolución
+---- | Casos de test
+----- | Funcion x)
+--
+--- | Parte B
+---- | Implementacion
+----- | Funcion x
+------ | Especificacion
+------ | Resolución
+---- | Casos de test
+----- | Funcion x)
+
+-----------------------------------------------------------------------
+--                               Tests
+-----------------------------------------------------------------------
+-- Todos los casos de tests provistos por los profesores fueron
+-- tomados en cuenta.
+--
+-- La mecánica de tests usada fue la de llamar a un test,
+-- el cual si pasa retorna True y sino False
+--
+-- Cada función realizada (salvo algunas excepciones) tiene su propio 
+-- caso de test, al igual que las funciones auxiliares utilizadas.
+-- Ej. La función 1 de la parte A tiene su test, 'testA_i', y una funcion
+--     auxiliar a la funcion 1, 'desplazar' tambien tiene su test,
+--     'testDesplazar'.
+-- 
+-- Todos los tests de la parte A pueden correrse con 'testA'
+-- y los de la parte B con 'testB'
+
+-----------------------------------------------------------------------
 --                   Definiciones y funciones dadas
 -----------------------------------------------------------------------
 
