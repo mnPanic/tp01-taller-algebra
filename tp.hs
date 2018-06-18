@@ -92,54 +92,6 @@ caminoValidoDesde tablero (d:ds) pos = (posValida tablero pos) && (caminoValidoD
 caminoValido :: Tablero a -> Camino -> Bool
 caminoValido tablero camino = caminoValidoDesde tablero camino (1, 1)
 
--------------------------- | Casos de test | --------------------------
---- | Elementos de prueba | ---
-tableroPrueba :: Tablero Integer
-tableroPrueba = [ [0, 0, 0],
-                  [0, 0, 0],
-                  [0, 0, 0] ]
-
-caminoPrueba1 :: Camino
-caminoPrueba1 = [Derecha, Abajo, Derecha, Izquierda, Abajo, Derecha]
-
---- | FUNCION 1 | ---
---- desplazar
-testDesplazar :: Bool
-testDesplazar =
-    desplazar (2, 2) Arriba     == (1, 2) &&
-    desplazar (2, 2) Derecha    == (2, 3) &&
-    desplazar (2, 2) Abajo      == (3, 2) &&
-    desplazar (2, 2) Izquierda  == (2, 1)
-
-
---- caminoValidoDesde
-testCaminoValidoDesde :: Bool
-testCaminoValidoDesde =
-    caminoValidoDesde tableroPrueba [] (4, 1)                   == False && -- Comenzando fuera del tablero nunca es un camino valido
-    caminoValidoDesde tableroPrueba caminoPrueba1 (1, 1)        == True  &&
-    caminoValidoDesde tableroPrueba [Arriba] (1, 1)             == False &&
-    caminoValidoDesde tableroPrueba [Izquierda] (1, 1)          == False &&
-    caminoValidoDesde tableroPrueba [Abajo] (3, 3)              == False &&
-    caminoValidoDesde tableroPrueba [Derecha] (3,3)             == False &&
-    caminoValidoDesde tableroPrueba [Derecha, Izquierda] (1, 3) == False    -- Entrar y salir de los limites del tablero no es valido
-    
---- caminoValido
-testCaminoValido :: Bool
-testCaminoValido =
-    caminoValido campo1 []                 == True  &&
-    caminoValido campo1 [Izquierda]        == False &&
-    caminoValido campo1 camino1            == True  &&
-    caminoValido campo1 camino2            == True  &&
-    caminoValido campo1 (Arriba:camino1)   == False &&
-    caminoValido campo1 (camino2++[Abajo]) == False
-
--- Funcion i) general
-testA_i :: Bool
-testA_i =
-    testDesplazar         &&
-    testCaminoValidoDesde &&
-    testCaminoValido
-
 ----------------------- FUNCION 2: caminoDeSalida -----------------------
 -- ESPECIFICACIÓN --
 -- Determina si un RAE, comenzando en la posición (1, 1), al seguir el
@@ -168,55 +120,6 @@ caminoDeSalidaDesde campo (d:ds) pos
 --                  llega a la posición (n, n) sin pisar ninguna mina.
 caminoDeSalida :: CampoMinado -> Camino -> Bool
 caminoDeSalida campo camino = caminoDeSalidaDesde campo camino (1, 1)
-
--------------------------- | Casos de test | --------------------------
---- | Elementos de prueba | ---
-campoPrueba :: CampoMinado
-campoPrueba = [ [False, False, True],
-                [False, True,  True],
-                [False, False, False] ]
-
-caminoPrueba2 :: Camino
-caminoPrueba2 = [Abajo, Abajo, Derecha, Derecha]
-
---- | FUNCION 2 | ---
---- posicionSalida
-testPosicionSalida :: Bool
-testPosicionSalida =
-    posicionSalida campoPrueba == (3, 3) &&
-    posicionSalida []          == (0, 0)
-
---- hayMina
-testHayMina :: Bool
-testHayMina = 
-    hayMina campoPrueba (1, 1) == False &&
-    hayMina campoPrueba (2, 2) == True  &&
-    hayMina campoPrueba (3, 3) == False
-
---- caminoDeSalidaDesde
-testCaminoDeSalidaDesde :: Bool
-testCaminoDeSalidaDesde =
-    caminoDeSalidaDesde campoPrueba caminoPrueba2 (1, 1)                         == True  &&
-    caminoDeSalidaDesde campoPrueba [] (3, 3)                                    == True  &&
-    caminoDeSalidaDesde campoPrueba [Abajo] (2,3)                                == False &&
-    caminoDeSalidaDesde campoPrueba [] (4, 4)                                    == False &&
-    caminoDeSalidaDesde campoPrueba (caminoPrueba2++[Izquierda]) (1, 1)          == False &&
-    caminoDeSalidaDesde campoPrueba (caminoPrueba2++[Derecha, Izquierda]) (1, 1) == False
-    
---- caminoDeSalida
-testCaminoDeSalida :: Bool
-testCaminoDeSalida =
-    caminoDeSalida campo1 camino1 == False &&
-    caminoDeSalida campo1 camino2 == True  &&
-    caminoDeSalida campo1 camino3 == True
-
---- Funcion ii) general
-testA_ii :: Bool
-testA_ii =
-    testPosicionSalida      &&
-    testHayMina             &&
-    testCaminoDeSalidaDesde &&    
-    testCaminoDeSalida
           
 ----------------------- FUNCION 3: caminoDeSalidaSinRepetidos -----------------------
 -- ESPECIFICACIÓN --
@@ -245,38 +148,6 @@ caminoSinPosicionesRepetidas camino = caminoSinPosicionesRepetidasDesde camino (
 --                              misma posición.
 caminoDeSalidaSinRepetidos :: CampoMinado -> Camino -> Bool
 caminoDeSalidaSinRepetidos campo camino = (caminoDeSalida campo camino) && (caminoSinPosicionesRepetidas camino)
-
--------------------------- | Casos de test | --------------------------
---- | FUNCION 3 | ---
---- contenidoEn
-testContenidoEn :: Bool
-testContenidoEn =
-    contenidoEn 1 [1, 2, 3] == True &&
-    contenidoEn 0 [1, 2, 3] == False
-
--- Nota: No hace falta testear caminoSinPosicionesRepetidasDesde ya que la posicion de inicio no afecta
---- caminoSinPosicionesRepetidas
-testCaminoSinPosicionesRepetidas :: Bool
-testCaminoSinPosicionesRepetidas =
-    caminoSinPosicionesRepetidas caminoPrueba1 == False &&
-    caminoSinPosicionesRepetidas caminoPrueba2 == True  &&
-    caminoSinPosicionesRepetidas camino1       == False &&
-    caminoSinPosicionesRepetidas camino2       == True  &&
-    caminoSinPosicionesRepetidas camino3       == False
-
---- testCaminoDeSalidaSinRepetidos
-testCaminoDeSalidaSinRepetidos :: Bool
-testCaminoDeSalidaSinRepetidos =
-    caminoDeSalidaSinRepetidos campo1 camino1 == False &&
-    caminoDeSalidaSinRepetidos campo1 camino2 == True  &&
-    caminoDeSalidaSinRepetidos campo1 camino3 == False
-
---- Funcion iii) general
-testA_iii :: Bool
-testA_iii = 
-    testContenidoEn                  &&
-    testCaminoSinPosicionesRepetidas &&
-    testCaminoDeSalidaSinRepetidos
 
 ----------------------- FUNCION 4: salidasEnKDesp -----------------------
 -- ESPECIFICACIÓN --
@@ -336,7 +207,133 @@ salidasEnKDesp :: CampoMinado -> Integer -> Conjunto Camino
 salidasEnKDesp campo k = cualesSonCaminosDeSalida campo (caminosPosiblesDeLongitud k)
 
 -------------------------- | Casos de test | --------------------------
---- | FUNCION 4 | ---
+--- | Elementos de prueba | ---
+tableroPrueba :: Tablero Integer
+tableroPrueba = [ [0, 0, 0],
+                  [0, 0, 0],
+                  [0, 0, 0] ]
+
+caminoPrueba1 :: Camino
+caminoPrueba1 = [Derecha, Abajo, Derecha, Izquierda, Abajo, Derecha]
+
+campoPrueba :: CampoMinado
+campoPrueba = [ [False, False, True],
+                [False, True,  True],
+                [False, False, False] ]
+
+caminoPrueba2 :: Camino
+caminoPrueba2 = [Abajo, Abajo, Derecha, Derecha]
+
+
+------ | FUNCION 1 | ------
+--- desplazar
+testDesplazar :: Bool
+testDesplazar =
+    desplazar (2, 2) Arriba     == (1, 2) &&
+    desplazar (2, 2) Derecha    == (2, 3) &&
+    desplazar (2, 2) Abajo      == (3, 2) &&
+    desplazar (2, 2) Izquierda  == (2, 1)
+
+
+--- caminoValidoDesde
+testCaminoValidoDesde :: Bool
+testCaminoValidoDesde =
+    caminoValidoDesde tableroPrueba [] (4, 1)                   == False && -- Comenzando fuera del tablero nunca es un camino valido
+    caminoValidoDesde tableroPrueba caminoPrueba1 (1, 1)        == True  &&
+    caminoValidoDesde tableroPrueba [Arriba] (1, 1)             == False &&
+    caminoValidoDesde tableroPrueba [Izquierda] (1, 1)          == False &&
+    caminoValidoDesde tableroPrueba [Abajo] (3, 3)              == False &&
+    caminoValidoDesde tableroPrueba [Derecha] (3,3)             == False &&
+    caminoValidoDesde tableroPrueba [Derecha, Izquierda] (1, 3) == False    -- Entrar y salir de los limites del tablero no es valido
+    
+--- caminoValido
+testCaminoValido :: Bool
+testCaminoValido =
+    caminoValido campo1 []                 == True  &&
+    caminoValido campo1 [Izquierda]        == False &&
+    caminoValido campo1 camino1            == True  &&
+    caminoValido campo1 camino2            == True  &&
+    caminoValido campo1 (Arriba:camino1)   == False &&
+    caminoValido campo1 (camino2++[Abajo]) == False
+
+-- Funcion i) general
+testA_i :: Bool
+testA_i =
+    testDesplazar         &&
+    testCaminoValidoDesde &&
+    testCaminoValido
+
+------ | FUNCION 2 | ------
+--- posicionSalida
+testPosicionSalida :: Bool
+testPosicionSalida =
+    posicionSalida campoPrueba == (3, 3) &&
+    posicionSalida []          == (0, 0)
+
+--- hayMina
+testHayMina :: Bool
+testHayMina = 
+    hayMina campoPrueba (1, 1) == False &&
+    hayMina campoPrueba (2, 2) == True  &&
+    hayMina campoPrueba (3, 3) == False
+
+--- caminoDeSalidaDesde
+testCaminoDeSalidaDesde :: Bool
+testCaminoDeSalidaDesde =
+    caminoDeSalidaDesde campoPrueba caminoPrueba2 (1, 1)                         == True  &&
+    caminoDeSalidaDesde campoPrueba [] (3, 3)                                    == True  &&
+    caminoDeSalidaDesde campoPrueba [Abajo] (2,3)                                == False &&
+    caminoDeSalidaDesde campoPrueba [] (4, 4)                                    == False &&
+    caminoDeSalidaDesde campoPrueba (caminoPrueba2++[Izquierda]) (1, 1)          == False &&
+    caminoDeSalidaDesde campoPrueba (caminoPrueba2++[Derecha, Izquierda]) (1, 1) == False
+    
+--- caminoDeSalida
+testCaminoDeSalida :: Bool
+testCaminoDeSalida =
+    caminoDeSalida campo1 camino1 == False &&
+    caminoDeSalida campo1 camino2 == True  &&
+    caminoDeSalida campo1 camino3 == True
+
+--- Funcion ii) general
+testA_ii :: Bool
+testA_ii =
+    testPosicionSalida      &&
+    testHayMina             &&
+    testCaminoDeSalidaDesde &&    
+    testCaminoDeSalida
+
+------ | FUNCION 3 | ------
+--- contenidoEn
+testContenidoEn :: Bool
+testContenidoEn =
+    contenidoEn 1 [1, 2, 3] == True &&
+    contenidoEn 0 [1, 2, 3] == False
+
+-- Nota: No hace falta testear caminoSinPosicionesRepetidasDesde ya que la posicion de inicio no afecta
+--- caminoSinPosicionesRepetidas
+testCaminoSinPosicionesRepetidas :: Bool
+testCaminoSinPosicionesRepetidas =
+    caminoSinPosicionesRepetidas caminoPrueba1 == False &&
+    caminoSinPosicionesRepetidas caminoPrueba2 == True  &&
+    caminoSinPosicionesRepetidas camino1       == False &&
+    caminoSinPosicionesRepetidas camino2       == True  &&
+    caminoSinPosicionesRepetidas camino3       == False
+
+--- testCaminoDeSalidaSinRepetidos
+testCaminoDeSalidaSinRepetidos :: Bool
+testCaminoDeSalidaSinRepetidos =
+    caminoDeSalidaSinRepetidos campo1 camino1 == False &&
+    caminoDeSalidaSinRepetidos campo1 camino2 == True  &&
+    caminoDeSalidaSinRepetidos campo1 camino3 == False
+
+--- Funcion iii) general
+testA_iii :: Bool
+testA_iii = 
+    testContenidoEn                  &&
+    testCaminoSinPosicionesRepetidas &&
+    testCaminoDeSalidaSinRepetidos
+
+------ | FUNCION 4 | ------
 --- listaDeElementos
 testListaDeElementos :: Bool
 testListaDeElementos =
