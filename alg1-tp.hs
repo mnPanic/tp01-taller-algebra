@@ -13,19 +13,21 @@
 --- | Definiciones y funciones dadas (por los profesores)
 --- | Parte A
 ---- | Implementacion
------ | Funcion x
------- | Especificacion
------- | Resolución
----- | Casos de test
------ | Funcion x)
+----- | Funcion Xi
+------ | Descripción
+------ | Funciones auxiliares
+------ | Funcion principal
 --
 --- | Parte B
 ---- | Implementacion
------ | Funcion x
------- | Especificacion
------- | Resolución
----- | Casos de test
------ | Funcion x)
+----- | Funcion Xi
+------ | Descripción
+------ | Funciones auxiliares
+------ | Funcion principal
+--
+--- | Casos de test
+---- | Parte A
+---- | Parte B
 
 -----------------------------------------------------------------------
 --                               Tests
@@ -38,11 +40,16 @@
 --
 -- Cada función realizada (salvo algunas excepciones) tiene su propio 
 -- caso de test, al igual que las funciones auxiliares utilizadas.
--- Ej. La función 1 de la parte A tiene su test, 'testA_i', y una funcion
---     auxiliar a la funcion 1, 'desplazar' tambien tiene su test,
+--
+-- Ej. La función 1 de la parte A tiene su test, 'testCaminoValido', 
+--     y una funcion auxiliar a la funcion 1, 'desplazar' tambien, 
 --     'testDesplazar'.
+--     Además, todas las funciones que pueden categorizarse como parte
+--     de la función 1 se pueden testear con la funcion que las engloba
+--     a todas, 'testA_i'.
 -- 
--- Todos los tests de la parte A pueden correrse con 'testA'
+-- Todos los tests pueden correrse con 'testA'
+-- Los de la parte A con 'testA',
 -- y los de la parte B con 'testB'
 
 -----------------------------------------------------------------------
@@ -106,26 +113,29 @@ taf2 = [ [Derecha,       Abajo, Abajo],
 -------------------------- | Implementación | -------------------------
 
 ----------------------- FUNCION 1: caminoValido -----------------------
--- ESPECIFICACIÓN --
+--- | DESCRIPCIÓN | ---
 -- Determina si un camino se mantiene dentro de los límites del tablero 
 -- a lo largo de su trayectoria, asumiendo que se comenzará 
 -- por la posición (1, 1).
 
--- desplazar: Dada una posición y un desplazamiento devuelve la posición resultante.
+
+--- | AUXILIARES | ---
+--- desplazar: Dada una posición y un desplazamiento devuelve la posición resultante.
 desplazar :: Posicion -> Desplazamiento -> Posicion
 desplazar (a, b) Arriba    = (a - 1, b)
 desplazar (a, b) Derecha   = (a, b + 1)
 desplazar (a, b) Abajo     = (a + 1, b)
 desplazar (a, b) Izquierda = (a, b - 1)
 
--- caminoValidoDesde: Determina si un camino se mantiene dentro de los
---                    límites de un tablero a lo largo de su trayectoria,
---                    comenzando en la posición dada.
+--- caminoValidoDesde: Determina si un camino se mantiene dentro de los
+--                     límites de un tablero a lo largo de su trayectoria,
+--                     comenzando en la posición dada.
 caminoValidoDesde :: Tablero a -> Camino -> Posicion -> Bool
 caminoValidoDesde tablero [] pos = posValida tablero pos
 caminoValidoDesde tablero (d:ds) pos = (posValida tablero pos) && (caminoValidoDesde tablero ds siguientePos)
     where siguientePos = desplazar pos d
 
+--- | PRINCIPAL | ---
 --- caminoValido: Determina si un camino se mantiene dentro de los límites
 --                del tablero a lo largo de su trayectoria, 
 --                asumiendo que se comenzará por la posición (1, 1).
@@ -133,10 +143,11 @@ caminoValido :: Tablero a -> Camino -> Bool
 caminoValido tablero camino = caminoValidoDesde tablero camino (1, 1)
 
 ----------------------- FUNCION 2: caminoDeSalida -----------------------
--- ESPECIFICACIÓN --
+--- | DESCRIPCIÓN | ---
 -- Determina si un RAE, comenzando en la posición (1, 1), al seguir el
 -- camino dado, llega a la posición (n, n) sin pisar ninguna mina.
 
+--- | AUXILIARES | ---
 --- posicionSalida: Dado un tablero, devuelve la posicion de salida.
 posicionSalida :: Tablero a -> Posicion
 posicionSalida tablero = (indiceFinal, indiceFinal)
@@ -156,17 +167,19 @@ caminoDeSalidaDesde campo (d:ds) pos
     | otherwise = (not (hayMina campo pos)) && caminoDeSalidaDesde campo ds siguientePos
     where siguientePos = desplazar pos d
 
+--- | PRINCIPAL | ---
 --- caminoDeSalida: Determina si un RAE, comenzando en la posición (1, 1), al seguir el camino dado, 
 --                  llega a la posición (n, n) sin pisar ninguna mina.
 caminoDeSalida :: CampoMinado -> Camino -> Bool
 caminoDeSalida campo camino = caminoDeSalidaDesde campo camino (1, 1)
           
 ----------------------- FUNCION 3: caminoDeSalidaSinRepetidos -----------------------
--- ESPECIFICACIÓN --
+--- | DESCRIPCIÓN | ---
 -- Determina si un RAE, comenzando en la posición (1, 1), al seguir el camino dado, 
 -- llega a la posición (n, n) sin pisar ninguna mina y sin pasar dos veces
 -- por una misma posición.
 
+--- | AUXILIARES | ---
 --- contenidoEn: Dado una lista de elementos y un elemento, dice si ese elemento pertenece a la lista.
 contenidoEn :: Eq a => a -> [a] -> Bool
 contenidoEn n l = elem n l
@@ -183,6 +196,7 @@ caminoSinPosicionesRepetidasDesde (d:ds) pos posiciones = (not (siguientePos `co
 caminoSinPosicionesRepetidas :: Camino -> Bool
 caminoSinPosicionesRepetidas camino = caminoSinPosicionesRepetidasDesde camino (1, 1) []
 
+--- | PRINCIPAL | ---
 --- caminoDeSalidaSinRepetidos: Determina si un RAE, comenzando en la posición (1, 1), al seguir el camino dado,
 --                              llega a la posición (n, n) sin pisar ninguna mina y sin pasar dos veces por una
 --                              misma posición.
@@ -190,11 +204,12 @@ caminoDeSalidaSinRepetidos :: CampoMinado -> Camino -> Bool
 caminoDeSalidaSinRepetidos campo camino = (caminoDeSalida campo camino) && (caminoSinPosicionesRepetidas camino)
 
 ----------------------- FUNCION 4: salidasEnKDesp -----------------------
--- ESPECIFICACIÓN --
+--- | DESCRIPCIÓN | ---
 -- Dados un campo minado y un número natural k, devuelve el conjunto de 
 -- todos los caminos de longitud k que lleven a un RAE desde (1, 1)
 -- hasta (n, n), sin pisar ninguna mina.
 
+--- | AUXILIARES | ---
 --- listaDeElementos: Dado un conjunto de elementos, crea un conjunto de listas con dichos elementos.
 --  Ej. listaDeElementos [1, 2, 3] ~> [[1], [2], [3]]
 listaDeElementos :: Conjunto a -> Conjunto [a]
@@ -240,6 +255,7 @@ cualesSonCaminosDeSalida campo (x:xs)
     | otherwise = caminosRestantes
     where caminosRestantes = (cualesSonCaminosDeSalida campo xs)
 
+--- | PRINCIPAL | ---
 --- salidasEnKDesp: Dados un campo minado y un número natural k,
 --                  devuelve el conjunto de todos los caminos de longitud k
 --                  que lleven a un RAE desde (1, 1) hasta (n, n), sin pisar ninguna mina.
@@ -456,7 +472,7 @@ testA =
 -------------------------- | Implementación | -------------------------
 
 ----------------------- FUNCION 1: recorrido -----------------------
-
+--- | PRINCIPAL | ---
 --- recorrido: Dado un tablero y una posición p, devuelve una lista que contiene
 --             las posiciones por las que pasará un AF si se lo coloca inicialmente
 --             sobre p. Tener en cuenta que puede tratarse de una lista infinita,
@@ -466,13 +482,14 @@ recorrido tablero pos
         | not (posValida tablero pos) = []      -- Si el AF esta fuera del tablero, terminó su recorrido.
         | otherwise = pos : (recorrido tablero siguientePos)
         where flechaEnPosicion = valor tablero pos  
-              siguientePos = desplazar pos flechaEnPosicion 
+              siguientePos = desplazar pos flechaEnPosicion
 
 ----------------------- FUNCION 2: escapaDelTablero -----------------------
--- ESPECIFICACIÓN --
+--- | DESCRIPCIÓN | ---
 -- Dado un tablero y una posición p, determina si al colocar un AF en p, 
 -- el AF escapará del tablero o entrará en un loop infinito.
 
+--- | AUXILIARES | ---
 -- tieneRepetidosAux: Guarda los elementos de una lista en una auxiliar, para ver si
 --                    en la original hay repetidos
 tieneRepetidosAux :: Eq a => [a] -> [a] -> Bool
@@ -485,6 +502,7 @@ tieneRepetidosAux (x:xs) y = (x `contenidoEn` y) || (tieneRepetidosAux xs (x:y))
 tieneRepetidos :: Eq a => [a] -> Bool
 tieneRepetidos lista = tieneRepetidosAux lista []
 
+--- | PRINCIPAL | ---
 --- escapaDelTablero: Dado un tablero y una posición p, determina si al colocar
 --                    un AF en p, el AF escapará del tablero o entrará en un loop infinito.
 escapaDelTablero :: TableroAF -> Posicion -> Bool
@@ -496,13 +514,14 @@ escapaDelTablero tablero pos = not (tieneRepetidos (recorrido tablero pos))
 --       saldría del tablero en una cantidad finita de desplazamientos
 
 ----------------------- FUNCION 3: cantidadDePasosParaSalir -----------------------
--- ESPECIFICACIÓN --
+--- | DESCRIPCIÓN | ---
 -- Dado un tablero y una posición p, devuelve cuántas veces tiene que desplazarse 
 -- un AF para escapar del tablero si inicialmente lo colocamos en p. Esto incluye 
 -- al último desplazamiento.
 
+--- | AUXILIARES | ---
 --- cambiarValor: Dada una lista, un elemento y una posición,
---                   Reemplaza el elemento en dicha posición por el dado.
+--                Reemplaza el elemento en dicha posición por el dado.
 --  Nota: Si el indice es mayor al tamaño de la lista,
 --        el elemento será agregado al final.
 --  Ej. cambiarValor [1,2,3] 6 2 ~> [1,6,3]
@@ -512,7 +531,7 @@ cambiarValor (x:xs) e 1 = e : xs
 cambiarValor (x:xs) e i = x : (cambiarValor xs e (i - 1))
 
 --- cambiarValorEnMatriz: Dada una matriz, un elemento y una posición,
---                    Reemplaza el elemento en dicha posición por el dado.
+--                        Reemplaza el elemento en dicha posición por el dado.
 --  Ej. cambiarValorEnMatriz [[1, 2, 3],[4, 5, 6],[7, 8, 9]] 0 (2,3) ~> [[1,2,3],[4,5,0],[7,8,9]]
 cambiarValorEnMatriz :: [[a]] -> a -> Posicion -> [[a]]
 cambiarValorEnMatriz matriz e (i, j) = cambiarValor matriz (cambiarValor fila e j) i
@@ -533,6 +552,8 @@ actualizarPosicionEnTablero :: TableroAF -> Posicion -> TableroAF
 actualizarPosicionEnTablero tablero pos = cambiarValorEnMatriz tablero valorActualizado pos
     where valorActualizado = rotarSentidoHorario (valor tablero pos)
 
+
+--- | PRINCIPAL | ---
 --- cantidadDePasosParaSalir: Dado un tablero y una posición p, devuelve cuántas
 --                            veces tiene que desplazarse un AF para escapar del
 --                            tablero si inicialmente lo colocamos en p. 
