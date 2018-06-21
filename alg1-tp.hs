@@ -199,7 +199,7 @@ caminoSinPosicionesRepetidas camino = caminoSinPosicionesRepetidasDesde camino (
 
 --- | PRINCIPAL | ---
 --- caminoDeSalidaSinRepetidos: Determina si un RAE, comenzando en la posición (1, 1), al seguir el camino dado,
---                              llega a la posición (n, n) sin pisar ninguna mina y sin pasar dos veces por una
+--                              llega a la posición (n, n) sin pisar ninguna mina y sin pasar dos veces por una
 --                              misma posición.
 caminoDeSalidaSinRepetidos :: CampoMinado -> Camino -> Bool
 caminoDeSalidaSinRepetidos campo camino = (caminoDeSalida campo camino) && (caminoSinPosicionesRepetidas camino)
@@ -308,11 +308,11 @@ escapaDelTablero tablero pos = not (tieneRepetidos (recorrido tablero pos))
 -- Nota: Con una lista infinita el unico caso en el cual tieneRepetidos no termina,
 --       es en el que en esa lista no hay elementos repetidos.
 --       En escapaDelTablero eso no se da nunca. Pues si un camino no tiene repetidos,
---       saldría del tablero en una cantidad finita de desplazamientos
+--       saldría del tablero en una cantidad finita de desplazamientos.
 
 ----------------------- FUNCION 3: cantidadDePasosParaSalir -----------------------
 --- | DESCRIPCIÓN | ---
--- Dado un tablero y una posición p, devuelve cuántas veces tiene que desplazarse 
+-- Dado un tablero y una posición p, devuelve cuántas veces tiene que desplazarse 
 -- un AF para escapar del tablero si inicialmente lo colocamos en p. Esto incluye 
 -- al último desplazamiento.
 
