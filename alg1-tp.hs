@@ -533,6 +533,9 @@ cambiarValor (x:xs) e i = x : (cambiarValor xs e (i - 1))
 --- cambiarValorEnMatriz: Dada una matriz, un elemento y una posición,
 --                        Reemplaza el elemento en dicha posición por el dado.
 --  Ej. cambiarValorEnMatriz [[1, 2, 3],[4, 5, 6],[7, 8, 9]] 0 (2,3) ~> [[1,2,3],[4,5,0],[7,8,9]]
+--  Nota: Sabemos que explota para posiciones fuera del tamaño de la matriz, pero no nos interesa
+--        ya que no le damos ese uso. (Nunca será necesario cambiar el valor de una posición con
+--        el AF fuera del tablero)
 cambiarValorEnMatriz :: [[a]] -> a -> Posicion -> [[a]]
 cambiarValorEnMatriz matriz e (i, j) = cambiarValor matriz (cambiarValor fila e j) i
     where fila = iesimo matriz i
@@ -565,3 +568,113 @@ cantidadDePasosParaSalir tablero pos
     where tableroActualizado = actualizarPosicionEnTablero tablero pos
           flechaEnPosicion = valor tablero pos
           siguientePos = desplazar pos flechaEnPosicion
+
+-------------------------- | Casos de test | --------------------------
+--- | Elementos de prueba | ---
+taf3 = [ [Derecha,     Abajo, Abajo],
+         [Arriba,  Izquierda, Abajo],
+         [Abajo,   Izquierda, Izquierda] ]
+
+------ | FUNCION 1 | ------
+--- recorrido
+testRecorrido :: Bool
+testRecorrido =
+    recorrido taf1 (3,3)          == [(3,3)]                         &&
+    recorrido taf1 (1,1)          == [(1,1),(1,2),(1,3),(2,3),(3,3)] &&
+    recorrido taf2 (3,2)          == [(3,2),(3,1)]                   &&
+    take 5 (recorrido taf2 (1,1)) == [(1,1),(1,2),(2,2),(2,1),(1,1)] &&
+    recorrido taf1 (4,4)          == []                              &&
+    recorrido taf2 (3,1)          == [(3,1)]                         &&
+    recorrido taf1 (2,1)          == [(2,1), (1,1), (1,2), (1,3), (2,3), (3,3)]
+
+--- Funcion i) general
+testB_i :: Bool
+testB_i =
+    testRecorrido
+
+------ | FUNCION 2 | ------
+--- tieneRepetidos
+testTieneRepetidos :: Bool
+testTieneRepetidos =
+    tieneRepetidos [1,2,3]                      == False &&
+    tieneRepetidos [1, 2, 3, 1]                 == True  &&
+    tieneRepetidos [(1,1), (2,1), (1,1)]        == True  &&
+    tieneRepetidos [(1,1), (2,1), (2,2), (1,2)] == False
+-- Consideramos que no es necesario testear tieneRepetidosAux
+
+--- escapaDelTablero
+testEscapaDelTablero :: Bool
+testEscapaDelTablero =
+    escapaDelTablero taf1 (2,2) == True  &&
+    escapaDelTablero taf2 (1,3) == True  &&
+    escapaDelTablero taf2 (1,1) == False &&
+    escapaDelTablero taf3 (1,3) == True  &&
+    escapaDelTablero taf3 (1,1) == False &&
+    escapaDelTablero taf3 (4,4) == True  &&
+    escapaDelTablero taf3 (2,2) == False
+
+--- Funcion ii) general
+testB_ii :: Bool
+testB_ii =
+    testTieneRepetidos &&
+    testEscapaDelTablero
+
+------ | FUNCION 3 | ------
+--- cambiarValor
+testCambiarValor :: Bool
+testCambiarValor =
+    cambiarValor [1,2,3] 6 2                          == [1,6,3]   &&
+    cambiarValor [1,2,3] 5 100                        == [1,2,3,5] &&
+    cambiarValor [] 5 2                               == [5]       &&
+    cambiarValor [Derecha, Izquierda, Arriba] Abajo 2 == [Derecha, Abajo, Arriba]
+
+
+--- cambiarValorEnMatriz
+testCambiarValorEnMatriz :: Bool
+testCambiarValorEnMatriz =
+    cambiarValorEnMatriz [[1, 2, 3],[4, 5, 6],[7, 8, 9]] 0 (2,3) == [[1,2,3],[4,5,0],[7,8,9]]    &&
+    cambiarValorEnMatriz [[1,1], [2,2], [3,3], [4,4]] 9 (3,2)    == [[1,1], [2,2], [3,9], [4,4]] &&
+    cambiarValorEnMatriz taf1 Derecha (1,3) == [ [Derecha,  Derecha, Derecha],
+                                                 [Arriba, Izquierda, Abajo],
+                                                 [Arriba, Izquierda, Abajo] ]
+
+--- rotarSentidoHorario
+testRotarSentidoHorario :: Bool
+testRotarSentidoHorario =
+    rotarSentidoHorario Arriba    == Derecha   &&
+    rotarSentidoHorario Derecha   == Abajo     &&
+    rotarSentidoHorario Abajo     == Izquierda &&
+    rotarSentidoHorario Izquierda == Arriba
+
+--- actualizarPosicionEnTablero
+testActualizarPosicionEnTablero :: Bool
+testActualizarPosicionEnTablero =
+    actualizarPosicionEnTablero taf1 (1,3) == [ [Derecha,  Derecha, Izquierda],
+                                                [Arriba, Izquierda, Abajo],
+                                                [Arriba, Izquierda, Abajo] ] &&
+    actualizarPosicionEnTablero taf2 (2,1) == [ [Derecha,        Abajo, Abajo],
+                                                [Derecha,    Izquierda, Abajo],
+                                                [Izquierda,  Izquierda, Izquierda] ]
+--- cantidadDePasosParaSalir
+testCantidadDePasosParaSalir :: Bool
+testCantidadDePasosParaSalir =
+    cantidadDePasosParaSalir taf2 (3,3) == 3 &&
+    cantidadDePasosParaSalir taf2 (1,1) == 9 &&
+    cantidadDePasosParaSalir taf3 (1,3) == 5 &&
+    cantidadDePasosParaSalir taf3 (1,1) == 9
+
+--- Funcion iii) general
+testB_iii :: Bool
+testB_iii =
+    testCambiarValor                &&
+    testCambiarValorEnMatriz        &&
+    testRotarSentidoHorario         &&
+    testActualizarPosicionEnTablero &&
+    testCantidadDePasosParaSalir
+
+------ | GENERAL | ------
+testB :: Bool
+testB =
+    testB_i  &&
+    testB_ii &&
+    testB_iii
